@@ -6,7 +6,9 @@ import 'package:hungryapp/features/auth/domain/repos/auth_repo.dart';
 
 class RegisterUsecase {
   final AuthRepo authRepo;
-  RegisterUsecase(this.authRepo);
+
+  RegisterUsecase({required this.authRepo});
+
   Future<Either<Failure, UserEntity>> call(RegisterRequestEntity entity) async {
     return await authRepo.register(entity);
   }

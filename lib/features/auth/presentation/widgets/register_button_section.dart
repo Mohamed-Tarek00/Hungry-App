@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hungryapp/core/router/app_router_names.dart';
+import 'package:hungryapp/core/utils/app_preferences.dart';
+import 'package:hungryapp/core/utils/service_locator.dart';
 import 'package:hungryapp/core/widgets/custom_button.dart';
+import 'package:hungryapp/core/widgets/custom_loading_indicator.dart';
+import 'package:hungryapp/core/widgets/failuer_snackbar.dart';
+import 'package:hungryapp/features/auth/domain/entity/register_request_entity.dart';
+import 'package:hungryapp/features/auth/presentation/cubits/register_cubit/register_cubit.dart';
 
 class RegisterButtonSection extends StatelessWidget {
   const RegisterButtonSection({
@@ -20,15 +27,41 @@ class RegisterButtonSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomButton(
-      ontap: () {
-        context.go(AppRouterNames.root);
-        // if (!formKey.currentState!.validate()) {
-        //   return;
-        // } else {}
+    return BlocConsumer<RegisterCubit, RegisterState>(
+      listener: (context, state) {
+        if (state is RegisterSuccess) {
+          final response = state.response;
+          final cache = getIt<AppPreferences>();
+          cache.saveUserData(user: response);
+          context.go(AppRouterNames.root);
+        }
+
+        if (state is RegisterFailuer) {
+          SnackBarHelper.showFailure(context, message: state.errMessage);
+        }
       },
-      title: 'SIGNUP',
-      color: Colors.white,
+      builder: (context, state) {
+        if (state is RegisterLoading) {
+          return CustomLoadingIndicator();
+        }
+
+        return CustomButton(
+          ontap: () {
+            if (formKey.currentState!.validate()) {
+              final registerEntity = RegisterRequestEntity(
+                name: name.text.trim(),
+                email: email.text.trim(),
+                phone: phone.text.trim(),
+                password: password.text.trim(),
+              );
+
+              context.read<RegisterCubit>().register(registerEntity);
+            }
+          },
+          title: 'SIGNUP',
+          color: Colors.white,
+        );
+      },
     );
   }
 }

@@ -4,19 +4,19 @@ import 'package:hungryapp/features/auth/domain/entity/user_entity.dart';
 import 'package:hungryapp/features/auth/domain/usecases/login_usecase.dart';
 import 'package:meta/meta.dart';
 
-part 'login_cubit_state.dart';
+part 'login_state.dart';
 
-class LoginCubitCubit extends Cubit<LoginCubitState> {
-  LoginCubitCubit(this.loginUsecase) : super(LoginCubitInitial());
+class LoginCubit extends Cubit<LoginState> {
+  LoginCubit(this.loginUsecase) : super(LoginInitial());
   final LoginUsecase loginUsecase;
 
   Future<void> login(LoginRequestEntity entity) async {
-    emit(LoginCubitLoading());
+    emit(LoginLoading());
     final result = await loginUsecase.call(entity);
 
     result.fold(
-      (failuer) => emit(LoginCubitFailuer(errMessage: failuer.errorMessage)),
-      (response) => emit(LoginCubitSuccess(response: response)),
+      (failuer) => emit(LoginFailuer(errMessage: failuer.errorMessage)),
+      (response) => emit(LoginSuccess(response: response)),
     );
   }
 }

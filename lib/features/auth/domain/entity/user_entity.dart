@@ -2,7 +2,7 @@ class UserEntity {
   final String token;
   final String name;
   final String email;
-  final String image;
+  final String? image;
 
   UserEntity({
     required this.token,

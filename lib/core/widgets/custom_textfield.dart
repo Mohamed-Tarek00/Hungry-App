@@ -44,6 +44,7 @@ class _CustomTextfieldState extends State<CustomTextfield> {
         cursorColor: kSecondaryColor,
         decoration: InputDecoration(
           prefixIcon: widget.preIcon ?? SizedBox.shrink(),
+          prefixIconColor: kSecondaryColor,
           suffixIcon: widget.isSecure
               ? GestureDetector(
                   onTap: () {
@@ -59,6 +60,10 @@ class _CustomTextfieldState extends State<CustomTextfield> {
                   ),
                 )
               : const SizedBox.shrink(),
+          border: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.transparent),
+            borderRadius: BorderRadius.circular(16),
+          ),
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Colors.transparent),
             borderRadius: BorderRadius.circular(16),

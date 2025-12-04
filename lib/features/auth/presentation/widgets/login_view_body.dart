@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -46,6 +47,7 @@ class _LoginViewBodyState extends State<LoginViewBody> {
                 controller: email,
                 validator: Validator.emailValidator,
                 inputType: TextInputType.emailAddress,
+                preIcon: Icon(CupertinoIcons.mail_solid),
               ),
               SizedBox(height: 20.h),
               CustomTextfield(
@@ -54,6 +56,7 @@ class _LoginViewBodyState extends State<LoginViewBody> {
                 validator: Validator.passwordValidator,
                 inputType: TextInputType.visiblePassword,
                 isSecure: true,
+                preIcon: Icon(CupertinoIcons.lock_fill),
               ),
               SizedBox(height: 30.h),
               LoginButtonSection(

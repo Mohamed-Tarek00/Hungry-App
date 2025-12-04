@@ -16,7 +16,7 @@ class AuthDataSourceImpl implements AuthDataSource {
   @override
   Future<User> loginRequest({required LoginRequestModel model}) async {
     final data = model.toJson();
-    final response = await _apiService.post(endPoint: '}/login', data: data);
+    final response = await _apiService.post(endPoint: '/login', data: data);
     return User.fromJson(response);
   }
 
