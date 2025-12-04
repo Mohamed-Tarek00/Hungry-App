@@ -12,4 +12,8 @@ class AppPreferences {
   Future<String?> getToken() async {
     return _preferences.getString('token');
   }
+
+  Future<void> clearData() async {
+    _preferences.clear();
+  }
 }

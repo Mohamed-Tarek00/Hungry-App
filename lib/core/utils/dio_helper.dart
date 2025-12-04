@@ -7,7 +7,7 @@ import 'package:hungryapp/core/utils/log_out_stream.dart';
 import 'package:hungryapp/core/utils/service_locator.dart';
 
 class DioHelper {
-  static const String baseUrl = 'https://docorizer.ghonim.makkah.solutions/v1/';
+  static const String baseUrl = 'https://sonic-zdi0.onrender.com/api';
   DioHelper();
   Dio createDio() {
     final dio = Dio(
@@ -49,9 +49,8 @@ class DioHelper {
         onError: (err, handler) async {
           if (err.response?.statusCode == 401 ||
               err.response?.statusCode == 403) {
-            // Logout_Stream
             getIt<LogoutStream>().addEvent('logout');
-            //  await getIt<AppPreferences>().clearUserData();
+            await getIt<AppPreferences>().clearData();
 
             final context = routerKey.currentContext;
             if (context != null && context.mounted) {
