@@ -1,10 +1,11 @@
-class LoginRequestModel {
-  final String email;
-  final String password;
+import 'package:hungryapp/features/auth/domain/entity/login_request_entity.dart';
 
-  LoginRequestModel({required this.email, required this.password});
+class LoginRequestModel {
+  final LoginRequestEntity entity;
+
+  LoginRequestModel({required this.entity});
 
   Map<String, dynamic> toJson() {
-    return {'email': email, 'password': password};
+    return {'email': entity.email, 'password': entity.password};
   }
 }
