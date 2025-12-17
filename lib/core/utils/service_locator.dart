@@ -11,6 +11,13 @@ import 'package:hungryapp/features/auth/domain/usecases/login_usecase.dart';
 import 'package:hungryapp/features/auth/domain/usecases/register_usecase.dart';
 import 'package:hungryapp/features/auth/presentation/cubits/login_cubit/login_cubit.dart';
 import 'package:hungryapp/features/auth/presentation/cubits/register_cubit/register_cubit.dart';
+import 'package:hungryapp/features/home/data/data_source/home_data_source.dart';
+import 'package:hungryapp/features/home/data/repo_impl/home_repo_impl.dart';
+import 'package:hungryapp/features/home/domain/repo/home_repo.dart';
+import 'package:hungryapp/features/home/domain/usecase/categories_usecase.dart';
+import 'package:hungryapp/features/home/domain/usecase/products_usecase.dart';
+import 'package:hungryapp/features/home/presentation/cubits/Categories_cubit/categories_cubit.dart';
+import 'package:hungryapp/features/home/presentation/cubits/Products_Cubit/products_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final getIt = GetIt.instance;
@@ -19,6 +26,7 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton(() => LogoutStream());
 
   // shared preferences
+
   final prefs = await SharedPreferences.getInstance();
   getIt.registerLazySingleton<SharedPreferences>(() => prefs);
   getIt.registerLazySingleton<AppPreferences>(
@@ -26,9 +34,9 @@ Future<void> setupServiceLocator() async {
   );
 
   // dio options for main api service
-  final dio = DioHelper().createDio();
-  getIt.registerLazySingleton<Dio>(() => dio);
-  getIt.registerLazySingleton<ApiService>(() => ApiService(getIt<Dio>()));
+  getIt.registerLazySingleton<DioHelper>(() => DioHelper());
+  getIt.registerLazySingleton<Dio>(() => getIt<DioHelper>().createDio());
+  getIt.registerLazySingleton<ApiService>(() => ApiService());
 
   // Auth
   getIt.registerLazySingleton<AuthDataSource>(
@@ -48,5 +56,25 @@ Future<void> setupServiceLocator() async {
   );
   getIt.registerLazySingleton<LoginCubit>(
     () => LoginCubit(getIt<LoginUsecase>()),
+  );
+
+  // Home
+  getIt.registerLazySingleton<HomeDataSource>(
+    () => HomeDataSourceImpl(getIt<ApiService>()),
+  );
+  getIt.registerLazySingleton<HomeRepo>(
+    () => HomeRepoImpl(getIt<HomeDataSource>()),
+  );
+  getIt.registerLazySingleton<ProductsUsecase>(
+    () => ProductsUsecase(getIt<HomeRepo>()),
+  );
+  getIt.registerLazySingleton<CategoriesUsecase>(
+    () => CategoriesUsecase(getIt<HomeRepo>()),
+  );
+  getIt.registerLazySingleton<ProductCubit>(
+    () => ProductCubit(getIt<ProductsUsecase>()),
+  );
+  getIt.registerLazySingleton<CategoriesCubit>(
+    () => CategoriesCubit(getIt<CategoriesUsecase>()),
   );
 }

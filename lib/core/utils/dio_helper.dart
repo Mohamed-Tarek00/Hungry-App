@@ -3,12 +3,12 @@ import 'package:go_router/go_router.dart';
 import 'package:hungryapp/core/router/app_router.dart';
 import 'package:hungryapp/core/router/app_router_names.dart';
 import 'package:hungryapp/core/utils/app_preferences.dart';
-import 'package:hungryapp/core/utils/log_out_stream.dart';
 import 'package:hungryapp/core/utils/service_locator.dart';
+import 'package:hungryapp/core/utils/log_out_stream.dart';
 
 class DioHelper {
   static const String baseUrl = 'https://sonic-zdi0.onrender.com/api';
-  DioHelper();
+
   Dio createDio() {
     final dio = Dio(
       BaseOptions(
@@ -22,6 +22,7 @@ class DioHelper {
       ),
     );
 
+    // Logging
     dio.interceptors.add(
       LogInterceptor(
         request: true,
@@ -31,12 +32,8 @@ class DioHelper {
         error: true,
       ),
     );
-    tokenInterceptor(dio);
 
-    return dio;
-  }
-
-  void tokenInterceptor(Dio dio) {
+    // Token Interceptor
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
@@ -49,6 +46,7 @@ class DioHelper {
         onError: (err, handler) async {
           if (err.response?.statusCode == 401 ||
               err.response?.statusCode == 403) {
+            // Logout event
             getIt<LogoutStream>().addEvent('logout');
             await getIt<AppPreferences>().clearData();
 
@@ -61,5 +59,7 @@ class DioHelper {
         },
       ),
     );
+
+    return dio;
   }
 }

@@ -4,10 +4,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hungryapp/core/constant.dart';
 import 'package:hungryapp/core/utils/font_styles.dart';
+import 'package:hungryapp/core/widgets/custom_network_image.dart';
+import 'package:hungryapp/features/home/domain/entity/product_entity.dart';
 
 class FoodCard extends StatelessWidget {
-  const FoodCard({super.key, this.onTap});
+  const FoodCard({super.key, this.onTap, required this.product});
   final void Function()? onTap;
+  final ProductEntity product;
 
   @override
   Widget build(BuildContext context) {
@@ -25,16 +28,18 @@ class FoodCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.asset(
-                'assets/images/sanswitch.png',
-                height: 130.h,
-                width: 170.w,
+              CustomNetworkImage(
+                imageUrl: product.image,
+                width: 120.w,
+                height: 120.h,
+                fit: BoxFit.contain,
               ),
-              Text('Cheeseburger', style: FontStyles.textStyle16),
+
+              Text(product.name, style: FontStyles.textStyle16),
               Text(
                 overflow: TextOverflow.ellipsis,
-                'Wendy\'s Burger',
-                style: FontStyles.textStyle16.copyWith(
+                product.description,
+                style: FontStyles.textStyle14.copyWith(
                   fontWeight: FontWeight.normal,
                 ),
               ),
@@ -44,7 +49,10 @@ class FoodCard extends StatelessWidget {
                 children: [
                   SvgPicture.asset('assets/icons/star.svg'),
                   SizedBox(width: 5.w),
-                  Text('4.9', style: FontStyles.textStyle16),
+                  Text(
+                    product.rating.toString(),
+                    style: FontStyles.textStyle16,
+                  ),
                   const Spacer(),
                   IconButton(
                     onPressed: () {},
@@ -52,6 +60,8 @@ class FoodCard extends StatelessWidget {
                   ),
                 ],
               ),
+
+              Text('\$ ${product.price}', style: FontStyles.textStyle16),
             ],
           ),
         ),

@@ -34,6 +34,6 @@ class AppPreferences {
   }
 
   Future<void> clearData() async {
-    _preferences.remove('token');
+    _preferences.clear();
   }
 }
